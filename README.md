@@ -12,7 +12,6 @@ Convie is a Chrome extension that helps online shoppers make smarter purchasing 
 5. Click **Load unpacked** and select the unzipped folder.
 6. Visit any e-commerce product page, highlight a product name/feature and click the injected button to see AI insights.
 
-> That’s it — everything else works automatically. No additional setup is required.
-
+ENJOY
 ## License
 This project is licensed under the MIT License. See the `LICENSE` file for details.
