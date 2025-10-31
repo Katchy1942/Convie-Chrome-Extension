@@ -2,6 +2,7 @@ from flask import jsonify, request, Blueprint
 from config import client, config, youtube, SERP_API_KEY
 import json
 import requests
+import traceback
 
 routes = Blueprint('routes', __name__)
 
@@ -177,6 +178,7 @@ def home():
         return jsonify(result), 200
         
     except json.JSONDecodeError as e:
+        print(traceback.format_exc())
         return jsonify({
             "error": "Failed to parse AI response",
             "details": str(e),
@@ -184,6 +186,7 @@ def home():
         }), 500
         
     except Exception as e:
+        print(traceback.format_exc())
         return jsonify({
             "error": "Failed to generate content",
             "details": str(e)
