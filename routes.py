@@ -78,6 +78,8 @@ def home():
 
         {{
             "type": "[if {selected_text} contains a product or feature, set to a 'product' or 'feature', else 'other']",
+            "youtube_search_keyword": "[a single keyword or group of words to find a relevant YouTube video about {selected_text}]",
+            "similar_products_keyword": "[a single keyword or group of words to find similar products or features on the web]",
             "summary": "[About 4 sentences explaining what {selected_text} is.]",
 
             "reviews": [
@@ -117,18 +119,6 @@ def home():
         Return ONLY valid JSON, no markdown formatting or extra text.
     """
 
-    youtube_keyword_prompt = f"""
-        Based on this highlighted text, {selected_text} and {full_context},
-        output a single keyword, or group of words that would help a user find a relevant YouTube video
-        about the highlighted text. Return ONLY the keyword, no extra text.
-    """
-
-    similar_stuff_prompt = f"""
-        Based on this highlighted text, {selected_text} and {full_context},
-        output a single keyword, or group of words that would help a user find similar products or features on the web.
-        Return ONLY the keyword, no extra text.
-    """
-
     print('Fetching AI response...')
 
     try:
@@ -153,20 +143,16 @@ def home():
         print("Main AI response parsed successfully.")
         
         print("Fetching YouTube keyword...")
-        youtube_response = client.models.generate_content(
-            model='gemini-2.5-pro',
-            contents=youtube_keyword_prompt,
-            config=config
-        )
-        youtube_keyword = youtube_response.text.strip()
+        if result.get("youtube_search_keyword"):
+            youtube_keyword = result["youtube_search_keyword"]
+        else:
+            youtube_keyword = selected_text
         
         print("Fetching similar products keyword...")
-        similar_response = client.models.generate_content(
-            model='gemini-2.5-pro',
-            contents=similar_stuff_prompt,
-            config=config
-        )
-        similar_keyword = similar_response.text.strip()
+        if result.get("similar_products_keyword"):
+            similar_keyword = result["similar_products_keyword"]
+        else:
+            similar_keyword = selected_text
         
         print(f"Searching YouTube for: {youtube_keyword}")
         result["youtube_videos"] = search_youtube(youtube_keyword, max_results=5)
